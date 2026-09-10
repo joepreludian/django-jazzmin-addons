@@ -1,0 +1,74 @@
+{% load i18n static %}
+{% comment %}
+    Jazzmin-styled replacement for django-constance's results_list include.
+    Expects `config_values` in context (either the full list or a fieldset's subset).
+    The data-* attributes on .reset-link are read by constance's admin/js/constance.js.
+{% endcomment %}
+<div class="table-responsive">
+    <table class="table table-hover table-striped mb-0 align-middle">
+        <thead>
+            <tr>
+                <th scope="col">{% trans "Name" %}</th>
+                <th scope="col">{% trans "Default" %}</th>
+                <th scope="col">{% trans "Value" %}</th>
+                <th scope="col" class="text-center">{% trans "Is modified" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in config_values %}
+            <tr>
+                <th scope="row" class="fw-normal">
+                    <span class="item-name fw-bold" id="{{ item.name|slugify }}">
+                        {{ item.name }}
+                        <a class="item-anchor" href="#{{ item.name|slugify }}" title="{% trans 'Link to this setting' %}">¶</a>
+                    </span>
+                    {% if item.help_text %}
+                        <div class="form-text">{{ item.help_text|linebreaksbr }}</div>
+                    {% endif %}
+                </th>
+                <td class="text-muted">{{ item.default|linebreaksbr }}</td>
+                <td>
+                    {{ item.form_field.errors }}
+                    {% if item.is_file %}
+                        <div class="form-text mb-1">
+                            {% trans "Current file" %}:
+                            <a href="{% get_media_prefix as MEDIA_URL %}{{ MEDIA_URL }}{{ item.value }}" target="_blank">{{ item.value }}</a>
+                        </div>
+                    {% endif %}
+                    {% if item.is_checkbox %}
+                        <div class="form-check form-switch">{{ item.form_field }}</div>
+                    {% else %}
+                        {{ item.form_field }}
+                    {% endif %}
+                    {% if not item.is_file %}
+                        <a href="#" class="reset-link small"
+                           data-field-id="{{ item.form_field.auto_id }}"
+                           data-field-type="{% spaceless %}
+                               {% if item.is_checkbox %}checkbox
+                               {% elif item.is_multi_select %}multi-select
+                               {% elif item.is_datetime %}datetime
+                               {% elif item.is_date %}date
+                               {% endif %}
+                           {% endspaceless %}"
+                           data-default="{% spaceless %}
+                               {% if item.is_checkbox %}{% if item.raw_default %} true {% else %} false {% endif %}
+                               {% elif item.is_multi_select %}{{ item.json_default }}
+                               {% elif item.is_date %}{{ item.raw_default|date:"U" }}
+                               {% elif item.is_datetime %}{{ item.raw_default|date:"U" }}
+                               {% else %}{{ item.default }}
+                               {% endif %}
+                           {% endspaceless %}">{% trans "Reset to default" %}</a>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if item.modified %}
+                        <i class="fas fa-check text-success" title="{% trans 'Modified' %}"></i>
+                    {% else %}
+                        <i class="fas fa-minus text-muted" title="{% trans 'Default' %}"></i>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
