@@ -112,7 +112,6 @@
     {{ block.super }}
     <script>
         (function () {
-            // Constance renders plain Django widgets; give them Bootstrap form classes.
             var root = document.getElementById('jazzmin-addons-constance');
             if (!root) { return; }
             root.querySelectorAll('input, textarea, select').forEach(function (el) {
