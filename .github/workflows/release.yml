@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+
+      - name: Check that the tag matches pyproject.toml
+        run: |
+          version=$(uvx --from toml-cli toml get --toml-path pyproject.toml project.version)
+          if [ "${GITHUB_REF_NAME}" != "v$version" ]; then
+            echo "::error::Ref '${GITHUB_REF_NAME}' does not match pyproject.toml version 'v$version'. Run this workflow on a release tag."
+            exit 1
+          fi
+
+      - name: Build sdist and wheel
+        run: uv build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/django-jazzmin-addons
+    permissions:
+      id-token: write
+    steps:
+      - uses: astral-sh/setup-uv@v10
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish with trusted publishing
+        run: uv publish --trusted-publishing always dist/*

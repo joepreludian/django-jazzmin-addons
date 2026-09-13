@@ -1,0 +1,54 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  version:
+    name: Version bump
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v10
+
+      - name: Read versions from pyproject.toml
+        id: versions
+        run: |
+          git show "origin/${{ github.base_ref }}:pyproject.toml" > base-pyproject.toml
+          base=$(uvx --from toml-cli toml get --toml-path base-pyproject.toml project.version)
+          head=$(uvx --from toml-cli toml get --toml-path pyproject.toml project.version)
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+          echo "head=$head" >> "$GITHUB_OUTPUT"
+          echo "Base branch version: $base"
+          echo "This PR's version:   $head"
+
+      - name: Check that the version was bumped
+        run: |
+          uv run --no-project --with packaging python - \
+            "${{ steps.versions.outputs.base }}" "${{ steps.versions.outputs.head }}" <<'PY'
+          import sys
+          from packaging.version import Version
+
+          base, head = Version(sys.argv[1]), Version(sys.argv[2])
+          if head <= base:
+              sys.exit(
+                  f"::error::pyproject.toml version {head} must be greater than {base} on the base branch."
+              )
+          print(f"Version bumped: {base} -> {head}")
+          PY
+
+      - name: Check that no tag exists for this version
+        run: |
+          tag="v${{ steps.versions.outputs.head }}"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" > /dev/null; then
+            echo "::error::Tag $tag already exists. Bump the version in pyproject.toml."
+            exit 1
+          fi
+          echo "Tag $tag is free."
