@@ -29,6 +29,8 @@ Nothing else to configure. Templates are picked up by app order.
 
 ### django-constance
 
+<img width="1547" height="797" alt="Screenshot 2026-09-13 at 3 44 18 AM" src="https://github.com/user-attachments/assets/37bd85d3-f138-4e07-a923-7ca9212bf5a7" />
+
 Restyles the [django-constance](https://github.com/jazzband/django-constance) admin page with Jazzmin's layout: one card per fieldset, Bootstrap switches for booleans, Jazzmin breadcrumbs, and a sticky Save button. Collapsible fieldsets and "Reset to default" links keep working.
 
 Install with the extra and add `constance` to `INSTALLED_APPS`:
