@@ -1,6 +1,6 @@
 [project]
 name = "django-jazzmin-addons"
-version = "0.1.0a1"
+version = "0.1.0a2"
 description = "Django-jazzmin addons and custom templates for django applications"
 readme = "README.md"
 authors = [
