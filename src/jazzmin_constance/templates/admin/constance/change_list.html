@@ -11,11 +11,11 @@
     {{ block.super }}
     {{ media.css }}
     <style>
-        #jazzmin-addons-constance .item-name { white-space: nowrap; }
-        #jazzmin-addons-constance .item-anchor { visibility: hidden; margin-left: .25em; text-decoration: none; }
-        #jazzmin-addons-constance .item-name:hover .item-anchor { visibility: visible; }
-        #jazzmin-addons-constance .table-responsive { overflow-x: auto; }
-        #jazzmin-addons-constance .errorlist { list-style: none; margin: 0 0 .25rem; padding: 0; }
+        #jazzmin-constance .item-name { white-space: nowrap; }
+        #jazzmin-constance .item-anchor { visibility: hidden; margin-left: .25em; text-decoration: none; }
+        #jazzmin-constance .item-name:hover .item-anchor { visibility: visible; }
+        #jazzmin-constance .table-responsive { overflow-x: auto; }
+        #jazzmin-constance .errorlist { list-style: none; margin: 0 0 .25rem; padding: 0; }
     </style>
 {% endblock %}
 
@@ -66,7 +66,7 @@
             {% endif %}
 
             <div class="row">
-                <div class="col-12 col-lg-9" id="jazzmin-addons-constance">
+                <div class="col-12 col-lg-9" id="jazzmin-constance">
                     {% if fieldsets %}
                         {% for fieldset in fieldsets %}
                             <div class="card mb-3{% if fieldset.collapse %} collapsed-card{% endif %}">
@@ -112,7 +112,7 @@
     {{ block.super }}
     <script>
         (function () {
-            var root = document.getElementById('jazzmin-addons-constance');
+            var root = document.getElementById('jazzmin-constance');
             if (!root) { return; }
             root.querySelectorAll('input, textarea, select').forEach(function (el) {
                 var type = (el.getAttribute('type') || '').toLowerCase();

@@ -26,4 +26,4 @@ jobs:
 
       - name: Run tests
         working-directory: test_project/src
-        run: uv run python manage.py test jazzmin_addons
+        run: uv run python manage.py test jazzmin_constance

@@ -31,9 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # jazzmin_addons must come before jazzmin so its templates take precedence.
+    # jazzmin_constance must come before jazzmin so its templates take precedence.
     # jazzmin must come before django.contrib.admin to override the admin templates.
-    'jazzmin_addons',
+    'jazzmin_constance',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',

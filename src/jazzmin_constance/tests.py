@@ -4,7 +4,7 @@ from django.urls import reverse
 
 
 class ConstanceTemplateOverrideTests(TestCase):
-    """The constance admin page must render through jazzmin_addons' template."""
+    """The constance admin page must render through jazzmin_constance's template."""
 
     def setUp(self):
         user = get_user_model().objects.create_superuser(
@@ -12,7 +12,7 @@ class ConstanceTemplateOverrideTests(TestCase):
         )
         self.client.force_login(user)
 
-    def test_constance_changelist_uses_jazzmin_addons_template(self):
+    def test_constance_changelist_uses_jazzmin_constance_template(self):
         response = self.client.get(reverse("admin:constance_config_changelist"))
 
         self.assertEqual(response.status_code, 200)
@@ -20,11 +20,11 @@ class ConstanceTemplateOverrideTests(TestCase):
             t.origin.name for t in response.templates if t.origin is not None
         ]
         self.assertTrue(
-            any("jazzmin_addons" in origin and "admin/constance/change_list.html" in origin
+            any("jazzmin_constance" in origin and "admin/constance/change_list.html" in origin
                 for origin in template_origins),
-            f"constance change_list not served by jazzmin_addons: {template_origins}",
+            f"constance change_list not served by jazzmin_constance: {template_origins}",
         )
-        self.assertContains(response, 'id="jazzmin-addons-constance"')
+        self.assertContains(response, 'id="jazzmin-constance"')
 
     def test_constance_changelist_renders_fieldsets_and_fields(self):
         response = self.client.get(reverse("admin:constance_config_changelist"))

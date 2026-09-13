@@ -12,11 +12,11 @@ Requires Python 3.10+ and Django 5.2+. This is an alpha release.
 pip install django-jazzmin-addons
 ```
 
-Add it to `INSTALLED_APPS` **before** `jazzmin`, which itself must come before `django.contrib.admin`:
+Each integration is its own Django app. Add the ones you use to `INSTALLED_APPS` **before** `jazzmin`, which itself must come before `django.contrib.admin`:
 
 ```python
 INSTALLED_APPS = [
-    "jazzmin_addons",
+    "jazzmin_constance",
     "jazzmin",
     "django.contrib.admin",
     # ...
@@ -41,7 +41,7 @@ pip install "django-jazzmin-addons[django-constance]"
 
 ```python
 INSTALLED_APPS = [
-    "jazzmin_addons",
+    "jazzmin_constance",
     "jazzmin",
     "django.contrib.admin",
     # ...
